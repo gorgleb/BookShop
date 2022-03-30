@@ -21,14 +21,15 @@ namespace BulkyBookWeb.Controllers
             return View(objCategoryList);
         }
         //GET
-       
+        [ActionName("CreateCategory")]
         public IActionResult СreateCategory()
         {
-            return View();
+            return View("CreateCategory");
         }
         //POST
         [HttpPost]
         [ValidateAntiForgeryToken]
+
         public IActionResult СreateCategory(Category obj)
         {
             if (obj.Name==obj.DisplayOrder.ToString())
