@@ -21,8 +21,8 @@ function loadDataTable() {
                        <div class="w-75 h-75 btn-group" role="group">
                         <a href="/Admin/Product/UpsertCategory?id=${data}"
                         class="btn btn-primary mx-2" ><i class="bi bi-pencil-square"></i>Edit</a>
-                        <a
-                        class="btn btn-danger btn-primary mx-2"><i class="bi bi-trash"></i>Delete</a>
+                        <a 
+                         class="btn btn-danger btn-primary mx-2"><i class="bi bi-trash"></i>Delete</a>
                     </div>
                      `
                 } ,

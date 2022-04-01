@@ -94,7 +94,7 @@ namespace BulkyBookWeb.Controllers
             {
                 return NotFound();
             }
-            var CoverTypeFromDbFirst = _unitOfWork.CoverType.GetFirstOrDefault(u=>u.Id==id);
+            var CoverTypeFromDbFirst = _unitOfWork.Product.GetFirstOrDefault(u=>u.Id==id);
             if (CoverTypeFromDbFirst == null)
             {
                 return NotFound();
@@ -106,14 +106,14 @@ namespace BulkyBookWeb.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteCategoryPost(int? id)
         {
-            var obj = _unitOfWork.CoverType.GetFirstOrDefault(u => u.Id == id);
+            var obj = _unitOfWork.Product.GetFirstOrDefault(u => u.Id == id);
             if (obj==null)
             {
                 return NotFound(); 
             }
-            _unitOfWork.CoverType.Remove(obj);
+            _unitOfWork.Product.Remove(obj);
             _unitOfWork.Save();
-            TempData["success"] = "CoverType deleted sucessfully";
+            TempData["success"] = "Product deleted sucessfully";
             return RedirectToAction("Index");
         
            
