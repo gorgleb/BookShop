@@ -54,11 +54,14 @@ namespace BulkyBookWeb.Controllers
             }
             else
             {
-               //update product
+                productVM.Product = _unitOfWork.Product.GetFirstOrDefault(u => u.Id == id);
+                return View(productVM);
+
+                //update product
             }
             //var categoryFromDb= _db.Categories.Find(id);
            
-            return View(productVM);
+            
         }
         //POST
         [HttpPost]
@@ -75,55 +78,68 @@ namespace BulkyBookWeb.Controllers
                     var uploads = Path.Combine(wwwRootPath, @"images\products");
                     var extension = Path.GetExtension(file.FileName);
 
+                    if (obj.Product.ImageUrl!=null)
+                    {
+                        var oldImagePath = Path.Combine(wwwRootPath, obj.Product.ImageUrl.TrimStart('\\'));
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+
+                    }
+
                     using (var fileStreams = new FileStream(Path.Combine(uploads,fileName+extension),FileMode.Create))
                     {
                         file.CopyTo(fileStreams);
                     }
-                    obj.Product.ImageUrl = @"\images\products" + fileName + extension;
+                    obj.Product.ImageUrl = @"\images\products\" + fileName + extension;
                  }
-                _unitOfWork.Product.Add(obj.Product);
+                if (obj.Product.Id == 0)
+                {
+                    _unitOfWork.Product.Add(obj.Product);
+                }
+                else
+                {
+                    _unitOfWork.Product.Update(obj.Product);
+                }
                 _unitOfWork.Save();
                 TempData["success"] = "Product  created sucessfully";
                 return RedirectToAction("Index");
             }
             return View(obj);
         }
-        public IActionResult DeleteCategory(int? id)
-        {
-            if (id == 0 || id == null)
-            {
-                return NotFound();
-            }
-            var CoverTypeFromDbFirst = _unitOfWork.Product.GetFirstOrDefault(u=>u.Id==id);
-            if (CoverTypeFromDbFirst == null)
-            {
-                return NotFound();
-            }
-            return View(CoverTypeFromDbFirst);
-        }
-        //POST
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteCategoryPost(int? id)
-        {
-            var obj = _unitOfWork.Product.GetFirstOrDefault(u => u.Id == id);
-            if (obj==null)
-            {
-                return NotFound(); 
-            }
-            _unitOfWork.Product.Remove(obj);
-            _unitOfWork.Save();
-            TempData["success"] = "Product deleted sucessfully";
-            return RedirectToAction("Index");
+
         
-           
-        }
         #region API Calls
         [HttpGet]
         public IActionResult GetAll()
         {
             var productList = _unitOfWork.Product.GetAll(includeProperties:"Category,CoverType");
             return new JsonResult(new { data = productList });
+        }
+
+        //POST
+        [HttpDelete]
+        public IActionResult DeleteCategory(int? id)
+        {
+            var obj = _unitOfWork.Product.GetFirstOrDefault(u => u.Id == id);
+            if (obj == null)
+            {
+                return new JsonResult(new {success=false,message = "Error while deleting"});
+
+            }
+            var oldImagePath = Path.Combine(_hostEnvironment.WebRootPath, obj.ImageUrl.TrimStart('\\'));
+            if (System.IO.File.Exists(oldImagePath))
+            {
+                System.IO.File.Delete(oldImagePath);
+            }
+            _unitOfWork.Product.Remove(obj);
+            _unitOfWork.Save();
+
+
+            return RedirectToAction("Index");
+            //return new JsonResult(new { success = true, message = "Delete Successful" });
+
         }
         #endregion
     }

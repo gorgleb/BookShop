@@ -21,7 +21,7 @@ function loadDataTable() {
                        <div class="w-75 h-75 btn-group" role="group">
                         <a href="/Admin/Product/UpsertCategory?id=${data}"
                         class="btn btn-primary mx-2" ><i class="bi bi-pencil-square"></i>Edit</a>
-                        <a 
+                        <a onClick=DeleteCategory('/Admin/Product/DeleteCategory/${data}')
                          class="btn btn-danger btn-primary mx-2"><i class="bi bi-trash"></i>Delete</a>
                     </div>
                      `
@@ -32,3 +32,25 @@ function loadDataTable() {
         ]
     });
 }
+function DeleteCategory(url)
+{
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: url,
+                type: 'DELETE'
+               
+                
+            })
+        }
+    })
+}
+

@@ -22,14 +22,14 @@ namespace BulkyBookWeb.Controllers
         }
         //GET
        
-        public IActionResult СreateCategory()
+        public IActionResult CreateCategory()
         {
             return View();
         }
         //POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult СreateCategory(CoverType obj)
+        public IActionResult CreateCategory(CoverType obj)
         {
            
             if (ModelState.IsValid)
