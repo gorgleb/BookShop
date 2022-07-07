@@ -16,3 +16,7 @@ html {
 body {
   margin-bottom: 60px;
 }
+#cardHome img {
+    height: 30em;
+    width: -webkit-fill-available;
+}
